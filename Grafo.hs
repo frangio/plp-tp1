@@ -31,7 +31,7 @@ agNodo n (G ns fv) = G (List.union [n] ns) fv
 
 -- Ejercicio 5
 sacarNodo :: Eq a => a -> Grafo a -> Grafo a
-sacarNodo n (G ns fv) = G (List.delete n ns) (List.delete n . fv)
+sacarNodo n (G ns fv) = G (List.delete n ns) (\e -> if e == n  then [] else (List.delete n.fv) e)
 
 -- Ejercicio 6
 agEje :: Eq a =>  (a,a) -> Grafo a -> Grafo a
