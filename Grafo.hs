@@ -52,6 +52,15 @@ union (G ns1 fv1) (G ns2 fv2) = G (List.union ns1 ns2) (\e -> (List.union (fv1 e
 clausura :: Grafo a -> Grafo a
 clausura = undefined
 
+puntofijo :: (Eq a) => (a -> a) -> (a -> a)
+puntofijo f x = take 1 $ dropWhile (\e -> (f e) /= e) (iterate f x)
+
+f n 
+	| n == 0 = 5
+	| n == 1 = 1
+	| n == 5 = 2
+	| n == 2 = 2
+	| otherwise  = 1
 
 
 
