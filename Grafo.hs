@@ -1,6 +1,6 @@
 module Grafo (Grafo, vacio, nodos, vecinos, agNodo, sacarNodo, agEje, lineal, union, clausura) where
 
-import qualified Data.List as List (delete, union)
+import qualified Data.List as List (delete, union, nub)
 
 data Grafo a = G [a] (a -> [a])
 
@@ -49,19 +49,12 @@ union :: Eq a => Grafo a -> Grafo a -> Grafo a
 union (G ns1 fv1) (G ns2 fv2) = G (List.union ns1 ns2) (\e -> (List.union (fv1 e) (fv2 e)))
 	
 -- Ejercicio 9
-clausura :: Grafo a -> Grafo a
-clausura = undefined
+clausura :: (Eq a) => Grafo a -> Grafo a
+clausura g@(G ns fv) = G ns (puntofijo (avanzarNivel g) . (:[]))
 
 puntofijo :: (Eq a) => (a -> a) -> (a -> a)
 puntofijo f x = head $ dropWhile (\e -> (f e) /= e) $ iterate f x
 
-f n 
-	| n == 0 = 5
-	| n == 1 = 1
-	| n == 5 = 2
-	| n == 2 = 2
-	| otherwise  = 1
-
-
-
+avanzarNivel (G ns fv) xs = vs ++ xs
+  where vs = filter (not . (`elem` xs)) $ List.nub $ concatMap fv xs
 
