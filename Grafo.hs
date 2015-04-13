@@ -53,7 +53,7 @@ clausura :: Grafo a -> Grafo a
 clausura = undefined
 
 puntofijo :: (Eq a) => (a -> a) -> (a -> a)
-puntofijo f x = take 1 $ dropWhile (\e -> (f e) /= e) (iterate f x)
+puntofijo f x = head $ dropWhile (\e -> (f e) /= e) $ iterate f x
 
 f n 
 	| n == 0 = 5
