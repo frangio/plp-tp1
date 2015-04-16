@@ -55,6 +55,7 @@ clausura g@(G ns fv) = G ns (puntofijo (avanzarNivel g) . (:[]))
 puntofijo :: (Eq a) => (a -> a) -> (a -> a)
 puntofijo f x = head $ dropWhile (\e -> (f e) /= e) $ iterate f x
 
+avanzarNivel :: (Eq a) => Grafo a -> [a] -> [a] 
 avanzarNivel (G ns fv) xs = vs ++ xs
-  where vs = filter (not . (`elem` xs)) $ List.nub $ concatMap fv xs
+  where vs = filter (flip notElem xs) $ List.nub $ concatMap fv xs
 
