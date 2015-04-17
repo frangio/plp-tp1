@@ -50,12 +50,9 @@ union (G ns1 fv1) (G ns2 fv2) = G (List.union ns1 ns2) (\e -> (List.union (fv1 e
 	
 -- Ejercicio 9
 clausura :: (Eq a) => Grafo a -> Grafo a
-clausura g@(G ns fv) = G ns (puntofijo (avanzarNivel g) . (:[]))
+clausura (G ns fv) = G ns (\x -> puntofijo extenderConVecinos [x])
+  where extenderConVecinos xs = foldl List.union xs (map fv xs)
 
 puntofijo :: (Eq a) => (a -> a) -> (a -> a)
 puntofijo f x = head $ dropWhile (\e -> (f e) /= e) $ iterate f x
-
-avanzarNivel :: (Eq a) => Grafo a -> [a] -> [a] 
-avanzarNivel (G ns fv) xs = vs ++ xs
-  where vs = filter (flip notElem xs) $ List.nub $ concatMap fv xs
 
