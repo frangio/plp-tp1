@@ -26,6 +26,9 @@ visibilidad = foldExp fVar fNot fOr fAnd fD fB
 		fVar = const 0
 		fNot = id
 		fOr = max
+		fAnd = max
+		fD = (1+)
+		fB = (1+)
 	
 
 -- Ejercicio 12
