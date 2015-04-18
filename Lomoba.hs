@@ -35,12 +35,12 @@ visibilidad = foldExp fVar fNot fOr fAnd fD fB
 extraer :: Exp -> [Prop]
 extraer = List.nub . foldExp fVar fNot fOr fAnd fD fB
 	where  
-		fVar x = [x]
-		fNot x = x
-		fOr x y = x ++ y
-		fAnd x y = x ++ y
-		fD x = x
-		fB x = x
+		fVar = (:[])
+		fNot = id 
+		fOr = (++)
+		fAnd = (++)
+		fD = id
+		fB = id
 
 -- Ejercicio 13
 eval :: Modelo -> Mundo -> Exp -> Bool
