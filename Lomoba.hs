@@ -25,8 +25,8 @@ visibilidad = foldExp fVar fNot fOr fAnd fD fB
 	where  
 		fVar = const 0
 		fNot x = x
-		fOr x y = x + y
-		fAnd x y = x + y
+		fOr x y = max x y
+		fAnd x y = max x y
 		fD x = x+1
 		fB x = x+1
 	
