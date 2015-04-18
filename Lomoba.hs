@@ -24,11 +24,8 @@ visibilidad :: Exp -> Integer
 visibilidad = foldExp fVar fNot fOr fAnd fD fB
 	where  
 		fVar = const 0
-		fNot x = x
-		fOr x y = max x y
-		fAnd x y = max x y
-		fD x = x+1
-		fB x = x+1
+		fNot = id
+		fOr = max
 	
 
 -- Ejercicio 12
