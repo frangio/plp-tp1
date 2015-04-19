@@ -44,7 +44,7 @@ extraer = List.nub . foldExp fVar fNot fOr fAnd fD fB
 
 -- Ejercicio 13
 eval :: Modelo -> Mundo -> Exp -> Bool
-eval = undefined
+eval (K gw v) w e = undefined
 
 -- Ejercicio 14
 valeEn :: Exp -> Modelo -> [Mundo]
