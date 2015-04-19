@@ -43,25 +43,14 @@ extraer = List.nub . foldExp fVar fNot fOr fAnd fD fB
 
 -- Ejercicio 13
 eval :: Modelo -> Mundo -> Exp -> Bool
-eval = undefined
---eval m@(K g fv) w e = foldExp fVar fNot fOr fAnd fD fB
---	where
---		fVar = (\x -> (elem m (fv x))
---		fNot = not
---		fOr = (||)
---		fAnd = (&&)
---		fD = fold $ (||) (map (\x -> eval' m e x) (vecinos g w))
---		fB = fold $ (&&) (map (\x -> eval' m e x) (vecinos g w))
-
---eval':: Modelo -> Exp -> Mundo -> Bool
---eval' (K g fv) e m = foldexp fVar fNot fOr fAnd fD fB
---	where
---		fVar = (\x -> (elem m (fv x))
---		fNot = not
---		fOr = (||)
---		fAnd = (&&)
-		
-
+eval m@(K g v) w e = foldExp fVar fNot fOr fAnd fD fB e
+	where
+		fVar x = elem w (v x)
+		fNot = not
+		fOr = (||)
+		fAnd = (&&)
+		fD _ = any (\w' -> eval m w' e) (vecinos g w)
+		fB _ = all (\w' -> eval m w' e) (vecinos g w)
 
 -- Ejercicio 14
 --duda acá : tengo que devolver los mundos del modelo para los que vale la fórmula?
