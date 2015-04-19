@@ -1,7 +1,7 @@
 module Lomoba where
 import Grafo
 import Tipos
-import qualified Data.List as List (union)
+import qualified Data.List as List (union, intersect)
 
 
 -- ---------------------------------Sección 6--------- Lomoba ---------------------------
@@ -53,9 +53,10 @@ valeEn :: Exp -> Modelo -> [Mundo]
 valeEn e m@(K g v) = filter (\x -> eval m x e) (nodos g)
 
 -- Ejercicio 15
--- no se si está bien. yo no cambie v, pero lo cierto es que los nodos que saqué ya no están en el grafo, y por lo tanto tampoco en el modelo
 quitar :: Exp -> Modelo -> Modelo
-quitar e m@(K g v) = K (foldl (flip sacarNodo) g (noValeEn e m)) v
+quitar e m@(K g v) = K g' v'
+  where g' = foldl (flip sacarNodo) g (noValeEn e m)
+        v' p = List.intersect (nodos g') (v p)
 
 noValeEn :: Exp -> Modelo ->[Mundo]
 noValeEn e m@(K g v) = filter (\x -> not (eval m x e)) (nodos g)
