@@ -17,9 +17,8 @@ foldExp fVar fNot fOr fAnd fD fB ei
 	And e3 e4 -> fAnd (frec e3) (frec e4) 
 	D e5 -> fD (frec e5) 
 	B e6 -> fB (frec e6)
-	
+
 -- Ejercicio 11
--- Revisar: en el caso B(B(VAR "p")), deberia reducirse a 1?
 visibilidad :: Exp -> Integer
 visibilidad = foldExp fVar fNot fOr fAnd fD fB
 	where  
