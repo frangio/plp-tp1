@@ -49,7 +49,6 @@ eval m@(K g v) w e = foldExp fVar fNot fOr fAnd fD fB e
         fB _ = all (\w' -> eval m w' e) (vecinos g w)
 
 -- Ejercicio 14
---duda acá : tengo que devolver los mundos del modelo para los que vale la fórmula?
 valeEn :: Exp -> Modelo -> [Mundo]
 valeEn e m@(K g fv) = filter (\x -> eval m x e) (nodos g)
 
