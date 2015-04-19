@@ -1,7 +1,7 @@
 module Lomoba where
 import Grafo
 import Tipos
-import qualified Data.List as List (delete, union, nub)
+import qualified Data.List as List (union)
 
 
 -- ---------------------------------Sección 6--------- Lomoba ---------------------------
@@ -30,11 +30,11 @@ visibilidad = foldExp fVar fNot fOr fAnd fD fB
 
 -- Ejercicio 12
 extraer :: Exp -> [Prop]
-extraer = List.nub . foldExp fVar fNot fOr fAnd fD fB
-  where fVar = (:[])
+extraer = foldExp fVar fNot fOr fAnd fD fB
+  where fVar p = [p]
         fNot = id
-        fOr = (++)
-        fAnd = (++)
+        fOr = List.union
+        fAnd = List.union
         fD = id
         fB = id
 
