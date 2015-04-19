@@ -45,16 +45,40 @@ extraer = List.nub . foldExp fVar fNot fOr fAnd fD fB
 -- Ejercicio 13
 eval :: Modelo -> Mundo -> Exp -> Bool
 eval = undefined
+--eval m@(K g fv) w e = foldExp fVar fNot fOr fAnd fD fB
+--	where
+--		fVar = (\x -> (elem m (fv x))
+--		fNot = not
+--		fOr = (||)
+--		fAnd = (&&)
+--		fD = fold $ (||) (map (\x -> eval' m e x) (vecinos g w))
+--		fB = fold $ (&&) (map (\x -> eval' m e x) (vecinos g w))
+
+--eval':: Modelo -> Exp -> Mundo -> Bool
+--eval' (K g fv) e m = foldexp fVar fNot fOr fAnd fD fB
+--	where
+--		fVar = (\x -> (elem m (fv x))
+--		fNot = not
+--		fOr = (||)
+--		fAnd = (&&)
+		
+
 
 -- Ejercicio 14
+--duda acá : tengo que devolver los mundos del modelo para los que vale la fórmula?
 valeEn :: Exp -> Modelo -> [Mundo]
-valeEn = undefined
+valeEn e m@(K g fv) = filter (\x -> eval m x e) (nodos g)
 
 -- Ejercicio 15
+-- no se si está bien. yo no cambie fv, pero lo cierto es que los nodos que saqué ya no están en el grafo, y por lo tanto tampoco en el modelo
 quitar :: Exp -> Modelo -> Modelo
-quitar = undefined
+quitar e m@(K g fv) = K (foldl (flip sacarNodo) g (noValeEn e m)) fv
+
+noValeEn :: Exp -> Modelo ->[Mundo]
+noValeEn e m@(K g fv) = filter (\x -> not (eval m x e)) (nodos g)
 
 -- Ejercicio 16
 cierto :: Modelo -> Exp -> Bool
-cierto = undefined
+cierto m@(K g fv) e = foldl (&&) True (map(\x -> eval m x e) (nodos g))
 
+--sacarNodos g ls = foldl (flip sacarNodo) g ls
