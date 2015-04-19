@@ -45,12 +45,14 @@ eval m@(K g v) w e = foldExp fVar fNot fOr fAnd fD fB e
         fNot = not
         fOr = (||)
         fAnd = (&&)
-        fD _ = any (\w' -> eval m w' e) (vecinos g w)
-        fB _ = all (\w' -> eval m w' e) (vecinos g w)
+        fD _ = any (eval' m e) (vecinos g w)
+        fB _ = all (eval' m e) (vecinos g w)
+
+eval' m e w = eval m w e
 
 -- Ejercicio 14
 valeEn :: Exp -> Modelo -> [Mundo]
-valeEn e m@(K g v) = filter (\x -> eval m x e) (nodos g)
+valeEn e m@(K g v) = filter (eval' m e) (nodos g)
 
 -- Ejercicio 15
 quitar :: Exp -> Modelo -> Modelo
@@ -59,10 +61,8 @@ quitar e m@(K g v) = K g' v'
         v' p = List.intersect (nodos g') (v p)
 
 noValeEn :: Exp -> Modelo ->[Mundo]
-noValeEn e m@(K g v) = filter (\x -> not (eval m x e)) (nodos g)
+noValeEn e m@(K g v) = filter (not . (eval' m e)) (nodos g)
 
 -- Ejercicio 16
 cierto :: Modelo -> Exp -> Bool
-cierto m@(K g v) e = foldl (&&) True (map(\x -> eval m x e) (nodos g))
-
---sacarNodos g ls = foldl (flip sacarNodo) g ls
+cierto m@(K g v) e = all (eval' m e) (nodos g)
