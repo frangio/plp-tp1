@@ -50,18 +50,18 @@ eval m@(K g v) w e = foldExp fVar fNot fOr fAnd fD fB e
 
 -- Ejercicio 14
 valeEn :: Exp -> Modelo -> [Mundo]
-valeEn e m@(K g fv) = filter (\x -> eval m x e) (nodos g)
+valeEn e m@(K g v) = filter (\x -> eval m x e) (nodos g)
 
 -- Ejercicio 15
--- no se si está bien. yo no cambie fv, pero lo cierto es que los nodos que saqué ya no están en el grafo, y por lo tanto tampoco en el modelo
+-- no se si está bien. yo no cambie v, pero lo cierto es que los nodos que saqué ya no están en el grafo, y por lo tanto tampoco en el modelo
 quitar :: Exp -> Modelo -> Modelo
-quitar e m@(K g fv) = K (foldl (flip sacarNodo) g (noValeEn e m)) fv
+quitar e m@(K g v) = K (foldl (flip sacarNodo) g (noValeEn e m)) v
 
 noValeEn :: Exp -> Modelo ->[Mundo]
-noValeEn e m@(K g fv) = filter (\x -> not (eval m x e)) (nodos g)
+noValeEn e m@(K g v) = filter (\x -> not (eval m x e)) (nodos g)
 
 -- Ejercicio 16
 cierto :: Modelo -> Exp -> Bool
-cierto m@(K g fv) e = foldl (&&) True (map(\x -> eval m x e) (nodos g))
+cierto m@(K g v) e = foldl (&&) True (map(\x -> eval m x e) (nodos g))
 
 --sacarNodos g ls = foldl (flip sacarNodo) g ls
