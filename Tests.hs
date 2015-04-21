@@ -23,8 +23,28 @@ testsParser = test [
 	(B (And (Var "p") (Var "q"))) 	~=? (parse "[](p && q)")]
 
 testsGrafo = test [
+	--nodos	
 	[1] ~~? (nodos (agNodo 1 vacio)),
-	[1,2] ~~? (nodos (agNodo 2 (agNodo 1 vacio)))
+	[1,2] ~~? (nodos (agNodo 2 (agNodo 1 vacio))),
+	--vecinos	
+	[1] ~~? (vecinos (agEje (2,1) (agNodo 2 (agNodo 1 vacio))) 2 ),
+	[] ~~? (vecinos (agEje (2,1) (agNodo 2 (agNodo 1 vacio))) 1 ),
+	[1,2,3] ~~? (nodos((agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))))),
+	[2,3] ~~? (vecinos (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))) 1),
+	[2] ~~? (vecinos (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))) 3),
+	[] ~~? (vecinos (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))) 2),	
+	--sacarNodo
+	[2] ~~? (nodos(sacarNodo 1 ((agNodo 2 (agNodo 1 vacio))))),	
+	[] ~~? (vecinos (sacarNodo 2 (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio))))))) 3 ),
+	[3] ~~? (vecinos (sacarNodo 2 (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio))))))) 1 ),
+	[1,3] ~~? (nodos (sacarNodo 2 (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))))),	
+	--lineal	
+	[1,2,3,4] ~~? (nodos (lineal [1,2,3,4])), 	
+	[2] ~~?	(vecinos (lineal [1,2,3,4]) 1),
+	[3] ~~?	(vecinos (lineal [1,2,3,4]) 2),
+	[4] ~~?	(vecinos (lineal [1,2,3,4]) 3),
+	[] ~~?	(vecinos (lineal [1,2,3,4]) 4)
+	
 	]
 
 ---------------
