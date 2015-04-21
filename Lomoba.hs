@@ -66,7 +66,7 @@ eval' m@(K g v) e = foldExp fVar fNot fOr fAnd fD fB e
 
 -- Ejercicio 14
 valeEn :: Exp -> Modelo -> [Mundo]
-valeEn e m@(K g v) = filter (eval' m e) (nodos g)
+valeEn e m@(K g v) = filter (flip (eval m) e)  (nodos g)--filter (eval' m e) (nodos g)
 
 -- Ejercicio 15
 quitar :: Exp -> Modelo -> Modelo
@@ -75,8 +75,8 @@ quitar e m@(K g v) = K g' v'
 		v' p = List.intersect (nodos g') (v p)
 
 noValeEn :: Exp -> Modelo ->[Mundo]
-noValeEn e m@(K g v) = filter (not . (eval' m e)) (nodos g)
+noValeEn e m@(K g v) = filter (not.(flip (eval m) e )) (nodos g)--filter (not . (eval' m e)) (nodos g)
 
 -- Ejercicio 16
 cierto :: Modelo -> Exp -> Bool
-cierto m@(K g v) e = all (eval' m e) (nodos g)
+cierto m@(K g v) e = all (flip (eval m ) e ) (nodos g)--all (eval' m e) (nodos g)
