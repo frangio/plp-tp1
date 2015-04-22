@@ -9,7 +9,8 @@ t = runTestTT allTests
 
 allTests = test [
 	"parser" ~: testsParser,
-	"grafo" ~: testsGrafo
+	"grafo" ~: testsGrafo,
+	"lomoba" ~: testsLomoba
 	]
 
 testsParser = test [
@@ -23,10 +24,10 @@ testsParser = test [
 	(B (And (Var "p") (Var "q"))) 	~=? (parse "[](p && q)")]
 
 testsGrafo = test [
-	--nodos	
+	--nodos	y agNodo
 	[1] ~~? (nodos (agNodo 1 vacio)),
 	[1,2] ~~? (nodos (agNodo 2 (agNodo 1 vacio))),
-	--vecinos	
+	--vecinos y egEje
 	[1] ~~? (vecinos (agEje (2,1) (agNodo 2 (agNodo 1 vacio))) 2 ),
 	[] ~~? (vecinos (agEje (2,1) (agNodo 2 (agNodo 1 vacio))) 1 ),
 	[1,2,3] ~~? (nodos((agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))))),
@@ -43,10 +44,48 @@ testsGrafo = test [
 	[2] ~~?	(vecinos (lineal [1,2,3,4]) 1),
 	[3] ~~?	(vecinos (lineal [1,2,3,4]) 2),
 	[4] ~~?	(vecinos (lineal [1,2,3,4]) 3),
-	[] ~~?	(vecinos (lineal [1,2,3,4]) 4)
+	[] ~~?	(vecinos (lineal [1,2,3,4]) 4),
+	--union
+	[1,2,3] ~~? (nodos (union (agEje (1,2) (agNodo 2 (agNodo 1 vacio))) (agEje (3,1) (agEje (1,3) (agNodo 3 (agNodo 1 vacio)))))),
+	[2,3] ~~? (vecinos (union (agEje (1,2) (agNodo 2 (agNodo 1 vacio))) (agEje (3,1) (agEje (1,3) (agNodo 3 (agNodo 1 vacio))))) 1),
+	[] ~~? (vecinos (union (agEje (1,2) (agNodo 2 (agNodo 1 vacio))) (agEje (3,1) (agEje (1,3) (agNodo 3 (agNodo 1 vacio))))) 2),
+	[1] ~~? (vecinos (union (agEje (1,2) (agNodo 2 (agNodo 1 vacio))) (agEje (3,1) (agEje (1,3) (agNodo 3 (agNodo 1 vacio))))) 3),
+	[1,2,3,4] ~~? (nodos (union (vacio) (lineal [1,2,3,4]))),	
 	
+	--clasura	
+	[1,2,3,4] ~~? (nodos (clausura (lineal [1,2,3,4]))),
+	[1,2,3,4] ~~? (vecinos (clausura (lineal [1,2,3,4])) 1),
+	[2,3,4] ~~? (vecinos (clausura (lineal [1,2,3,4])) 2),
+	[3,4] ~~? (vecinos (clausura (lineal [1,2,3,4])) 3),
+	[4] ~~?(vecinos (clausura (lineal [1,2,3,4])) 4)
+	--puntofijo hacer mas tests de esto
+	--0 ~=? (puntofijo (\x -> x ) 0),
+	--[2,2] ~=? (puntofijo reverse [2,2])
 	]
 
+
+testsLomoba = test [
+	-- a alguno se le ocurren test de foldExp? el hecho de que funcionen las demas no indicaría que foldExp va bien?
+	-- visibilidad
+	0 ~=? (visibilidad (Var "p")),
+	1 ~=? (visibilidad (D (Var "p"))),
+	1 ~=? (visibilidad (Not (D (Var "p")))),
+	2 ~=? (visibilidad (D(Not (D (Var "p"))))),
+	2 ~=? (visibilidad (Or (D (D (Var "p"))) (D (D (Var "q"))))),
+	3 ~=? (visibilidad (D ((Or (D (Var "p")) (D (D (Var "q"))))))),
+	3 ~=? (visibilidad (B ((And (D (Var "p")) (D (B (Var "q"))))))),
+	-- extraer
+	["p"] ~~? (extraer (Var "p")),
+	["p"] ~~? (extraer (B(Var "p"))),
+	["p"] ~~? (extraer (D(Var "p"))),
+	["p", "q"] ~~? (extraer (Or (Var "p") (Var "q"))),	
+	["p", "q"] ~~? (extraer (And (Var "p") (Var "q"))),
+	["p"] ~~? (extraer (Or (D (D (Var "p"))) (D (D (Var "p"))))),
+	["p", "q", "r"] ~~? (extraer (And (Or (Var "p") (Var "q")) (B(D (Var "r"))))),	
+	["p", "q", "r"] ~~?	(extraer (D (And (Or (Var "p") (Var "q")) (B(D (Var "r"))))))
+
+	--hacer tests para eval, quitar, valeEn, noValeEn y cierto
+	]
 ---------------
 --  helpers  --
 ---------------
