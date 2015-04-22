@@ -39,16 +39,6 @@ extraer = foldExp fVar fNot fOr fAnd fD fB
 		fB = id
 
 -- Ejercicio 13
---eval :: Modelo -> Mundo -> Exp -> Bool
---eval m@(K g v) w e = foldExp fVar fNot fOr fAnd fD fB e
---	where   fVar x = elem w (v x)
---		fNot = not
---		fOr = (||)
---		fAnd = (&&)
---		fD =
---		fB = 
-
---eval' m e w = eval m w e
 
 eval :: Modelo -> Mundo -> Exp -> Bool
 eval m w e = eval' m e w
@@ -56,13 +46,13 @@ eval m w e = eval' m e w
 --pensar eval' como algo que recibe un modelo y una exp y devuelve una funcion que recibe un mundo y devuelve un bool
 
 eval' :: Modelo -> Exp -> Mundo -> Bool
-eval' m@(K g v) e = foldExp fVar fNot fOr fAnd fD fB e
-	where	fVar x = (\w -> elem w (v x))
-		fNot = (\rec w -> not (rec w))
-		fOr = (\recI recD w -> (recI w) || (recD w))
-		fAnd = (\recI recD w -> (recI w) && (recD w))
-		fD = (\rec w -> any rec (vecinos g w))
-		fB = (\rec w -> all rec (vecinos g w))
+eval' m@(K g v) = foldExp fVar fNot fOr fAnd fD fB
+	where	fVar x w = elem w (v x)
+		fNot rec w = not (rec w)
+		fOr recI recD w = (recI w) || (recD w)
+		fAnd recI recD w = (recI w) && (recD w)
+		fD rec w = any rec (vecinos g w)
+		fB rec w = all rec (vecinos g w)
 
 -- Ejercicio 14
 valeEn :: Exp -> Modelo -> [Mundo]
