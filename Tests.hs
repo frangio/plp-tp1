@@ -118,7 +118,8 @@ testsLomoba = test [
 	[1,3,4] ~~? valeEn (parse "[]r") modelo1,
 	[4] ~~? valeEn (parse "r && q") modelo1,
 	[1,2,3,4] ~~? valeEn (parse "r || (q || p)") modelo1,
-	[1,3] ~~? valeEn (parse "!r && (q || p)") modelo1
+	[1,3] ~~? valeEn (parse "!r && (q || p)") modelo1,
+	[] ~~? valeEn (parse "s") modelo1
 	
 	
 	--hacer tests para  quitar, noValeEn y cierto
