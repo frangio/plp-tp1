@@ -66,7 +66,7 @@ testsGrafo = test [
 
 testsLomoba = test [
 	-- foldExp
-        (parse "<>[]p || q && r") ~=? (foldExp Var Not Or And D B (parse "<>[]p || q && r")),
+        exp1 ~=? (foldExp Var Not Or And D B exp1),
 
 	-- visibilidad
 	0 ~=? (visibilidad (parse "p")),
@@ -125,14 +125,18 @@ testsLomoba = test [
 	[] ~~? valeEn (parse "s") modelo1,
 	
 	
-	--hacer tests para  quitar, y cierto
+	--quitar
 	[1] ~~? let (K g _) = quitar (parse "p") modelo1 in nodos g,
 	[4,2] ~~? let (K g _) = quitar (parse "r") modelo1 in nodos g,
 	[4] ~~? let (K g _) = quitar (parse "r&&q") modelo1 in nodos g,
 	[1,3,4] ~~? let (K g _) = quitar (parse "[]r") modelo1 in nodos g,
-	[1] ~~? let (K g _) = quitar (parse "<>r") modelo1 in nodos g
+	[1] ~~? let (K g _) = quitar (parse "<>r") modelo1 in nodos g,
 
-	--hacer tests para  quitar, noValeEn y cierto
+	--cierto
+	True ~=? cierto (K vacio (const [])) (parse "p"),
+	True ~=? cierto (K vacio (const [])) (parse "[]p"),
+	False ~=? cierto modelo1 (parse "p"),
+	True ~=? cierto modelo1 (parse "[][]q")
 	]
 
 modelo1 = K (union (lineal [1,2,3]) (lineal [1,4]) ) v1
@@ -140,7 +144,9 @@ modelo1 = K (union (lineal [1,2,3]) (lineal [1,4]) ) v1
 		v1 "q" = [3,4]
 		v1 "r" = [2,4]
 		v1 _ = []
-		
+
+exp1 = parse "<>[]p || q && r"
+
 ---------------
 --  helpers  --
 ---------------
