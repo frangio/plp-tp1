@@ -84,7 +84,7 @@ testsLomoba = test [
 	["p", "q", "r"] ~~? (extraer (parse "(p||q)&&[]<>r")),	
 	["p", "q", "r"] ~~? (extraer (parse "<>((p||q)&&[]<>r)")),
 
-	--hacer tests para  quitar, valeEn, noValeEn y cierto
+	-- eval
 	True ~=? eval modelo1 1 (parse "p"),
 	False ~=? eval modelo1 1 (parse "q"),
 	
@@ -107,7 +107,22 @@ testsLomoba = test [
 	False ~=? eval modelo1 1 (parse "<>(p && q)"),
 	True ~=? eval modelo1 1 (parse "<>(r && q)"),
 	
-	True ~=? eval modelo1 2 (parse "[](!p && q)")
+	True ~=? eval modelo1 2 (parse "[](!p && q)"),
+	
+	-- valeEn
+	[1] ~~? valeEn (parse "p") modelo1,
+	[2,3,4] ~~? valeEn (parse "!p") modelo1,
+	[3,4] ~~? valeEn (parse "q") modelo1,
+	[1,2] ~~? valeEn (parse "<>q") modelo1,
+	[2,3,4] ~~? valeEn (parse "[]q") modelo1,
+	[1,3,4] ~~? valeEn (parse "[]r") modelo1,
+	[4] ~~? valeEn (parse "r && q") modelo1,
+	[1,2,3,4] ~~? valeEn (parse "r || (q || p)") modelo1,
+	[1,3] ~~? valeEn (parse "!r && (q || p)") modelo1
+	
+	
+	--hacer tests para  quitar, noValeEn y cierto
+	
 	]
 
 modelo1 = K (union (lineal [1,2,3]) (lineal [1,4]) ) v1
