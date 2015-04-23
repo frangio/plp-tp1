@@ -126,28 +126,20 @@ testsLomoba = test [
 	
 	
 	--hacer tests para  quitar, y cierto
-	[] ~~? valeEn (parse "q") (quitar (parse "p") modelo1),
-	[] ~~? valeEn (parse "r") (quitar (parse "p") modelo1),
-	[4] ~~? valeEn (parse "q") (quitar (parse "r") modelo1),
-	[4] ~~? valeEn (parse "q") (quitar (parse "r&&q") modelo1),
-	[4] ~~? valeEn (parse "r") (quitar (parse "r&&q") modelo1),
-	[4] ~~? valeEn (parse "r") (quitar (parse "[]r") modelo1),
-	[] ~~? valeEn (parse "q") (quitar (parse "<>r") modelo1),
-	[] ~~? valeEn (parse "r") (quitar (parse "<>r") modelo1),
-	[1] ~~? valeEn (parse "p") (quitar (parse "<>r") modelo1)
+	[1] ~~? let (K g _) = quitar (parse "p") modelo1 in nodos g,
+	[4,2] ~~? let (K g _) = quitar (parse "r") modelo1 in nodos g,
+	[4] ~~? let (K g _) = quitar (parse "r&&q") modelo1 in nodos g,
+	[1,3,4] ~~? let (K g _) = quitar (parse "[]r") modelo1 in nodos g,
+	[1] ~~? let (K g _) = quitar (parse "<>r") modelo1 in nodos g
 
 	--hacer tests para  quitar, noValeEn y cierto
-
->>>>>>> Stashed changes
 	]
 
 modelo1 = K (union (lineal [1,2,3]) (lineal [1,4]) ) v1
-	where v1 m 
-		| m == "p" = [1]
-		| m == "q" = [3,4]
-		| m == "r" = [2,4]
-		| otherwise = []
-
+	where	v1 "p" = [1] 
+		v1 "q" = [3,4]
+		v1 "r" = [2,4]
+		v1 _ = []
 		
 ---------------
 --  helpers  --

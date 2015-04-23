@@ -62,7 +62,7 @@ valeEn :: Exp -> Modelo -> [Mundo]
 valeEn e m@(K g v) = filter (eval' m e) (nodos g)
 
 -- Ejercicio 15
--- Devuelve un modelo en el que para ningún mundo vale la expresión dada.
+-- Devuelve un modelo en el que para todos los mundos vale la expresión dada.
 quitar :: Exp -> Modelo -> Modelo
 quitar e m@(K g v) = K g' v'
 	where   g' = foldl (flip sacarNodo) g (noValeEn e m)
