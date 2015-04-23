@@ -39,7 +39,7 @@ agEje (n1, n2) (G ns fv) = G ns (\e -> if e == n1 then (n2:fv e) else (fv e))
 
 -- Ejercicio 7
 lineal :: Eq a => [a] -> Grafo a
-lineal ns = G ns (\n -> take 1 (tail (dropWhile (/= n) ns))) 
+lineal ns = G ns (\n -> take 1 $ drop 1 $ dropWhile (/= n) ns) 
 
 -- Sin lambda:
 -- lineal ns = G ns (take 1 . tail . flip dropWhile ns . (/=))
