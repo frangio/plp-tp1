@@ -63,26 +63,26 @@ testsGrafo = test [
 	--[2,2] ~=? (puntofijo reverse [2,2])
 	]
 
-
 testsLomoba = test [
-	-- a alguno se le ocurren test de foldExp? el hecho de que funcionen las demas no indicaría que foldExp va bien?
+	-- foldExp
+        (parse "<>[]p || q && r") ~=? (foldExp Var Not Or And D B (parse "<>[]p || q && r")),
 	-- visibilidad
-	0 ~=? (visibilidad (Var "p")),
-	1 ~=? (visibilidad (D (Var "p"))),
-	1 ~=? (visibilidad (Not (D (Var "p")))),
-	2 ~=? (visibilidad (D(Not (D (Var "p"))))),
-	2 ~=? (visibilidad (Or (D (D (Var "p"))) (D (D (Var "q"))))),
-	3 ~=? (visibilidad (D ((Or (D (Var "p")) (D (D (Var "q"))))))),
-	3 ~=? (visibilidad (B ((And (D (Var "p")) (D (B (Var "q"))))))),
+	0 ~=? (visibilidad (parse "p")),
+	1 ~=? (visibilidad (parse "<>p")),
+	1 ~=? (visibilidad (parse "!<>p")),
+	2 ~=? (visibilidad (parse "<>!<>p")),
+	2 ~=? (visibilidad (parse "<><>p || <><>q")),
+	3 ~=? (visibilidad (parse "<>(<>p || <><>q)")),
+	3 ~=? (visibilidad (parse "[](<>p && <>[]q)")),
 	-- extraer
-	["p"] ~~? (extraer (Var "p")),
-	["p"] ~~? (extraer (B(Var "p"))),
-	["p"] ~~? (extraer (D(Var "p"))),
-	["p", "q"] ~~? (extraer (Or (Var "p") (Var "q"))),	
-	["p", "q"] ~~? (extraer (And (Var "p") (Var "q"))),
-	["p"] ~~? (extraer (Or (D (D (Var "p"))) (D (D (Var "p"))))),
-	["p", "q", "r"] ~~? (extraer (And (Or (Var "p") (Var "q")) (B(D (Var "r"))))),	
-	["p", "q", "r"] ~~?	(extraer (D (And (Or (Var "p") (Var "q")) (B(D (Var "r"))))))
+	["p"] ~~? (extraer (parse "p")),
+	["p"] ~~? (extraer (parse "<>p")),
+	["p"] ~~? (extraer (parse "[]p")),
+	["p", "q"] ~~? (extraer (parse "p||q")),	
+	["p", "q"] ~~? (extraer (parse "p&&q")),
+	["p"] ~~? (extraer (parse "<><>p || <><>p")),
+	["p", "q", "r"] ~~? (extraer (parse "(p||q)&&[]<>r")),	
+	["p", "q", "r"] ~~? (extraer (parse "<>((p||q)&&[]<>r)"))
 
 	--hacer tests para eval, quitar, valeEn, noValeEn y cierto
 	]
