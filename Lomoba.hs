@@ -7,6 +7,7 @@ import qualified Data.List as List (union, intersect)
 -- ---------------------------------Sección 6--------- Lomoba ---------------------------
 
 -- Ejercicio 10
+-- Realiza recursión estructural sobre expresiónes.
 foldExp :: (Prop -> b) -> (b -> b) -> (b -> b -> b) -> (b -> b -> b) -> (b -> b) -> (b -> b) -> Exp -> b
 foldExp fVar fNot fOr fAnd fD fB ei =
 	let frec = foldExp fVar fNot fOr fAnd fD fB
@@ -19,6 +20,8 @@ foldExp fVar fNot fOr fAnd fD fB ei =
 		B e6 -> fB (frec e6)
 
 -- Ejercicio 11
+-- Devuelve un la visibilidad de una fórmula, es decir cuánto del grafo se
+-- utiliza para evaluarla.
 visibilidad :: Exp -> Integer
 visibilidad = foldExp fVar fNot fOr fAnd fD fB
 	where   fVar = const 0
@@ -29,6 +32,7 @@ visibilidad = foldExp fVar fNot fOr fAnd fD fB
 		fB = (1+)
 
 -- Ejercicio 12
+-- Lista las variables que aparecen en la fórmula.
 extraer :: Exp -> [Prop]
 extraer = foldExp fVar fNot fOr fAnd fD fB
 	where   fVar p = [p]
@@ -39,11 +43,9 @@ extraer = foldExp fVar fNot fOr fAnd fD fB
 		fB = id
 
 -- Ejercicio 13
-
+-- Dado un modelo, decide si una fórmula es verdadera en un mundo.
 eval :: Modelo -> Mundo -> Exp -> Bool
 eval m w e = eval' m e w
-
---pensar eval' como algo que recibe un modelo y una exp y devuelve una funcion que recibe un mundo y devuelve un bool
 
 eval' :: Modelo -> Exp -> Mundo -> Bool
 eval' m@(K g v) = foldExp fVar fNot fOr fAnd fD fB
@@ -55,18 +57,21 @@ eval' m@(K g v) = foldExp fVar fNot fOr fAnd fD fB
 		fB rec w = all rec (vecinos g w)
 
 -- Ejercicio 14
+-- Devuelve todos los mundos de un modelo para los que vale una expresión.
 valeEn :: Exp -> Modelo -> [Mundo]
-valeEn e m@(K g v) = filter (flip (eval m) e)  (nodos g)--filter (eval' m e) (nodos g)
+valeEn e m@(K g v) = filter (eval' m e) (nodos g)
 
 -- Ejercicio 15
+-- Devuelve un modelo en el que para ningún mundo vale la expresión dada.
 quitar :: Exp -> Modelo -> Modelo
 quitar e m@(K g v) = K g' v'
 	where   g' = foldl (flip sacarNodo) g (noValeEn e m)
 		v' p = List.intersect (nodos g') (v p)
 
 noValeEn :: Exp -> Modelo ->[Mundo]
-noValeEn e m@(K g v) = filter (not.(flip (eval m) e )) (nodos g)--filter (not . (eval' m e)) (nodos g)
+noValeEn e m@(K g v) = filter (not . eval' m e) (nodos g)
 
 -- Ejercicio 16
+-- Dado un modelo, indica si para todos sus mundos vale una expresión.
 cierto :: Modelo -> Exp -> Bool
-cierto m@(K g v) e = all (flip (eval m ) e ) (nodos g)--all (eval' m e) (nodos g)
+cierto m@(K g v) e = all (eval' m e) (nodos g)
