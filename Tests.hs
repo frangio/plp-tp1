@@ -82,10 +82,41 @@ testsLomoba = test [
 	["p", "q"] ~~? (extraer (parse "p&&q")),
 	["p"] ~~? (extraer (parse "<><>p || <><>p")),
 	["p", "q", "r"] ~~? (extraer (parse "(p||q)&&[]<>r")),	
-	["p", "q", "r"] ~~? (extraer (parse "<>((p||q)&&[]<>r)"))
+	["p", "q", "r"] ~~? (extraer (parse "<>((p||q)&&[]<>r)")),
 
-	--hacer tests para eval, quitar, valeEn, noValeEn y cierto
+	--hacer tests para  quitar, valeEn, noValeEn y cierto
+	True ~=? eval modelo1 1 (parse "p"),
+	False ~=? eval modelo1 1 (parse "q"),
+	
+	True ~=? eval modelo1 4 (parse "r && q"),
+	False ~=? eval modelo1 4 (parse "p && q"),
+	
+	True ~=? eval modelo1 1 (parse "p || q"),
+	False ~=? eval modelo1 2 (parse "p || q"),
+	
+	True ~=? eval modelo1 2 (parse "!p || q"),
+	False ~=? eval modelo1 1 (parse "!p || q"),
+	True ~=? eval modelo1 3 (parse "!p || q"),
+	
+	False ~=? eval modelo1 1 (parse "<>p && p"),
+	True ~=? eval modelo1 1 (parse "<>q && p"),
+	
+	True ~=? eval modelo1 1 (parse "[]r"),
+	False ~=? eval modelo1 1 (parse "[]q"),
+	
+	False ~=? eval modelo1 1 (parse "<>(p && q)"),
+	True ~=? eval modelo1 1 (parse "<>(r && q)"),
+	
+	True ~=? eval modelo1 2 (parse "[](!p && q)")
 	]
+
+modelo1 = K (union (lineal [1,2,3]) (lineal [1,4]) ) v1
+	where v1 m 
+		| m == "p" = [1]
+		| m == "q" = [3,4]
+		| m == "r" = [2,4]
+		| otherwise = []
+	
 ---------------
 --  helpers  --
 ---------------
