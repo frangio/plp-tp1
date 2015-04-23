@@ -27,6 +27,7 @@ testsGrafo = test [
 	--nodos	y agNodo
 	[1] ~~? (nodos (agNodo 1 vacio)),
 	[1,2] ~~? (nodos (agNodo 2 (agNodo 1 vacio))),
+
 	--vecinos y egEje
 	[1] ~~? (vecinos (agEje (2,1) (agNodo 2 (agNodo 1 vacio))) 2 ),
 	[] ~~? (vecinos (agEje (2,1) (agNodo 2 (agNodo 1 vacio))) 1 ),
@@ -34,17 +35,20 @@ testsGrafo = test [
 	[2,3] ~~? (vecinos (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))) 1),
 	[2] ~~? (vecinos (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))) 3),
 	[] ~~? (vecinos (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))) 2),	
+
 	--sacarNodo
 	[2] ~~? (nodos(sacarNodo 1 ((agNodo 2 (agNodo 1 vacio))))),	
 	[] ~~? (vecinos (sacarNodo 2 (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio))))))) 3 ),
 	[3] ~~? (vecinos (sacarNodo 2 (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio))))))) 1 ),
 	[1,3] ~~? (nodos (sacarNodo 2 (agEje(3,2) (agEje (1,3) (agEje (1,2)(agNodo 3 (agNodo 2 (agNodo 1 vacio)))))))),	
+
 	--lineal	
 	[1,2,3,4] ~~? (nodos (lineal [1,2,3,4])), 	
 	[2] ~~?	(vecinos (lineal [1,2,3,4]) 1),
 	[3] ~~?	(vecinos (lineal [1,2,3,4]) 2),
 	[4] ~~?	(vecinos (lineal [1,2,3,4]) 3),
 	[] ~~?	(vecinos (lineal [1,2,3,4]) 4),
+
 	--union
 	[1,2,3] ~~? (nodos (union (agEje (1,2) (agNodo 2 (agNodo 1 vacio))) (agEje (3,1) (agEje (1,3) (agNodo 3 (agNodo 1 vacio)))))),
 	[2,3] ~~? (vecinos (union (agEje (1,2) (agNodo 2 (agNodo 1 vacio))) (agEje (3,1) (agEje (1,3) (agNodo 3 (agNodo 1 vacio))))) 1),
@@ -58,14 +62,12 @@ testsGrafo = test [
 	[2,3,4] ~~? (vecinos (clausura (lineal [1,2,3,4])) 2),
 	[3,4] ~~? (vecinos (clausura (lineal [1,2,3,4])) 3),
 	[4] ~~?(vecinos (clausura (lineal [1,2,3,4])) 4)
-	--puntofijo hacer mas tests de esto
-	--0 ~=? (puntofijo (\x -> x ) 0),
-	--[2,2] ~=? (puntofijo reverse [2,2])
 	]
 
 testsLomoba = test [
 	-- foldExp
         (parse "<>[]p || q && r") ~=? (foldExp Var Not Or And D B (parse "<>[]p || q && r")),
+
 	-- visibilidad
 	0 ~=? (visibilidad (parse "p")),
 	1 ~=? (visibilidad (parse "<>p")),
@@ -74,6 +76,7 @@ testsLomoba = test [
 	2 ~=? (visibilidad (parse "<><>p || <><>q")),
 	3 ~=? (visibilidad (parse "<>(<>p || <><>q)")),
 	3 ~=? (visibilidad (parse "[](<>p && <>[]q)")),
+
 	-- extraer
 	["p"] ~~? (extraer (parse "p")),
 	["p"] ~~? (extraer (parse "<>p")),
@@ -87,28 +90,28 @@ testsLomoba = test [
 	-- eval
 	True ~=? eval modelo1 1 (parse "p"),
 	False ~=? eval modelo1 1 (parse "q"),
-	
+
 	True ~=? eval modelo1 4 (parse "r && q"),
 	False ~=? eval modelo1 4 (parse "p && q"),
-	
+
 	True ~=? eval modelo1 1 (parse "p || q"),
 	False ~=? eval modelo1 2 (parse "p || q"),
-	
+
 	True ~=? eval modelo1 2 (parse "!p || q"),
 	False ~=? eval modelo1 1 (parse "!p || q"),
 	True ~=? eval modelo1 3 (parse "!p || q"),
-	
+
 	False ~=? eval modelo1 1 (parse "<>p && p"),
 	True ~=? eval modelo1 1 (parse "<>q && p"),
-	
+
 	True ~=? eval modelo1 1 (parse "[]r"),
 	False ~=? eval modelo1 1 (parse "[]q"),
-	
+
 	False ~=? eval modelo1 1 (parse "<>(p && q)"),
 	True ~=? eval modelo1 1 (parse "<>(r && q)"),
-	
+
 	True ~=? eval modelo1 2 (parse "[](!p && q)"),
-	
+
 	-- valeEn
 	[1] ~~? valeEn (parse "p") modelo1,
 	[2,3,4] ~~? valeEn (parse "!p") modelo1,
@@ -132,7 +135,10 @@ testsLomoba = test [
 	[] ~~? valeEn (parse "q") (quitar (parse "<>r") modelo1),
 	[] ~~? valeEn (parse "r") (quitar (parse "<>r") modelo1),
 	[1] ~~? valeEn (parse "p") (quitar (parse "<>r") modelo1)
-	
+
+	--hacer tests para  quitar, noValeEn y cierto
+
+>>>>>>> Stashed changes
 	]
 
 modelo1 = K (union (lineal [1,2,3]) (lineal [1,4]) ) v1
